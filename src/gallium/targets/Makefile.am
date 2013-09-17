@@ -136,7 +136,7 @@ endif
 
 if HAVE_GALLIUM_SOFTPIPE
 if HAVE_DRI
-SUBDIRS += dri-swrast
+SUBDIRS += dri-swrast dri-swrast2
 endif
 
 if HAVE_ST_XVMC

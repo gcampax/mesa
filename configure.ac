@@ -1818,7 +1818,7 @@ if test "x$with_gallium_drivers" != x; then
             fi
 
             if test "x$enable_dri" = xyes; then
-                GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS dri-swrast"
+                GALLIUM_TARGET_DIRS="$GALLIUM_TARGET_DIRS dri-swrast dri-swrast2"
                 HAVE_COMMON_DRI=yes
             fi
             if test "x$enable_vdpau" = xyes; then
@@ -2036,6 +2036,7 @@ AC_CONFIG_FILES([Makefile
 		src/gallium/targets/dri-r600/Makefile
 		src/gallium/targets/dri-radeonsi/Makefile
 		src/gallium/targets/dri-swrast/Makefile
+		src/gallium/targets/dri-swrast2/Makefile
 		src/gallium/targets/dri-vmwgfx/Makefile
 		src/gallium/targets/egl-static/Makefile
 		src/gallium/targets/gbm/Makefile
@@ -2069,6 +2070,7 @@ AC_CONFIG_FILES([Makefile
 		src/gallium/winsys/nouveau/drm/Makefile
 		src/gallium/winsys/radeon/drm/Makefile
 		src/gallium/winsys/svga/drm/Makefile
+		src/gallium/winsys/sw/kms-dri/Makefile
 		src/gallium/winsys/sw/dri/Makefile
 		src/gallium/winsys/sw/fbdev/Makefile
 		src/gallium/winsys/sw/null/Makefile

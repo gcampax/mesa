@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <libudev.h>
 
@@ -41,8 +42,11 @@ dri_fd_get_driver_name(int fd)
    struct udev *udev;
    struct udev_device *device, *parent;
    const char *pci_id;
-   char *driver = NULL;
+   char *driver = "swrast";
    int vendor_id, chip_id, i, j;
+
+   if (getenv("LIBGL_ALWAYS_SOFTWARE") != NULL)
+      return driver;
 
    udev = udev_new();
    device = _gbm_udev_device_new_from_fd(udev, fd);
