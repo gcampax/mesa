@@ -1064,6 +1064,13 @@ enum __DRIChromaSiting {
 #define __DRI_IMAGE_ERROR_BAD_PARAMETER 3
 /*@}*/
 
+/**
+ * \name Capabilities that might be returned by __DRIimageExtensionRec::getCapabilities
+ */
+/*@{*/
+#define __DRI_IMAGE_CAP_GLOBAL_NAMES 1
+/*@}*/
+
 typedef struct __DRIimageRec          __DRIimage;
 typedef struct __DRIimageExtensionRec __DRIimageExtension;
 struct __DRIimageExtensionRec {
@@ -1170,6 +1177,14 @@ struct __DRIimageExtensionRec {
                                          enum __DRIChromaSiting vert_siting,
                                          unsigned *error,
                                          void *loaderPrivate);
+
+   /**
+    * Query for general capabilities of the driver that concern
+    * buffer sharing and image importing.
+    *
+    * \since 9
+    */
+   int (*getCapabilities)(__DRIscreen *screen);
 };
 
 

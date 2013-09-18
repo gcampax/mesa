@@ -203,7 +203,10 @@ get_back_bo(struct dri2_egl_surface *dri2_surf, __DRIbuffer *buffer)
 
    bo = (struct gbm_dri_bo *) dri2_surf->back->bo;
 
-   dri2_dpy->image->queryImage(bo->image, __DRI_IMAGE_ATTRIB_NAME, &name);
+   if (dri2_surf->base.Resource.Display->Extensions.MESA_drm_image)
+      dri2_dpy->image->queryImage(bo->image, __DRI_IMAGE_ATTRIB_NAME, &name);
+   else
+      dri2_dpy->image->queryImage(bo->image, __DRI_IMAGE_ATTRIB_HANDLE, &name);
    dri2_dpy->image->queryImage(bo->image, __DRI_IMAGE_ATTRIB_STRIDE, &pitch);
 
    buffer->attachment = __DRI_BUFFER_BACK_LEFT;
@@ -489,7 +492,14 @@ dri2_initialize_drm(_EGLDriver *drv, _EGLDisplay *disp)
    disp->Extensions.EXT_buffer_age = EGL_TRUE;
 
 #ifdef HAVE_WAYLAND_PLATFORM
-   disp->Extensions.WL_bind_wayland_display = EGL_TRUE;
+   if (dri2_dpy->image->base.version >= 9 &&
+       dri2_dpy->image->getCapabilities != NULL) {
+      int capabilities;
+
+      capabilities = dri2_dpy->image->getCapabilities(dri2_dpy->dri_screen);
+      disp->Extensions.WL_bind_wayland_display = (capabilities & __DRI_IMAGE_CAP_GLOBAL_NAMES) != 0;
+   } else
+      disp->Extensions.WL_bind_wayland_display = EGL_TRUE;
 #endif
    dri2_dpy->authenticate = dri2_drm_authenticate;
 

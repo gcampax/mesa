@@ -272,6 +272,8 @@ svga_get_param(struct pipe_screen *screen, enum pipe_cap param)
       return 1;
    case PIPE_CAP_ENDIANNESS:
       return PIPE_ENDIAN_LITTLE;
+   case PIPE_CAP_BUFFER_SHARE:
+      return 1;
    }
 
    debug_printf("Unexpected PIPE_CAP_ query %u\n", param);

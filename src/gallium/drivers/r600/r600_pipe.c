@@ -582,6 +582,7 @@ static int r600_get_param(struct pipe_screen* pscreen, enum pipe_cap param)
         case PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSFER:
 	case PIPE_CAP_QUERY_PIPELINE_STATISTICS:
 	case PIPE_CAP_TEXTURE_MULTISAMPLE:
+        case PIPE_CAP_BUFFER_SHARE:
 		return 1;
 
 	case PIPE_CAP_TGSI_TEXCOORD:

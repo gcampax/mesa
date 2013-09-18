@@ -168,6 +168,7 @@ fd_screen_get_param(struct pipe_screen *pscreen, enum pipe_cap param)
 	case PIPE_CAP_MAX_DUAL_SOURCE_RENDER_TARGETS:
 	case PIPE_CAP_TEXTURE_MULTISAMPLE:
 	case PIPE_CAP_USER_CONSTANT_BUFFERS:
+        case PIPE_CAP_BUFFER_SHARE:
 		return 1;
 
 	case PIPE_CAP_TGSI_TEXCOORD:

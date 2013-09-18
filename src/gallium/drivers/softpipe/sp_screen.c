@@ -65,6 +65,8 @@ softpipe_get_name(struct pipe_screen *screen)
 static int
 softpipe_get_param(struct pipe_screen *screen, enum pipe_cap param)
 {
+   struct softpipe_screen *sp_screen = softpipe_screen(screen);
+
    switch (param) {
    case PIPE_CAP_MAX_COMBINED_SAMPLERS:
       return 2 * PIPE_MAX_SAMPLERS;  /* VS + FS */
@@ -185,6 +187,11 @@ softpipe_get_param(struct pipe_screen *screen, enum pipe_cap param)
       return 1;
    case PIPE_CAP_ENDIANNESS:
       return PIPE_ENDIAN_NATIVE;
+   case PIPE_CAP_BUFFER_SHARE:
+      if (sp_screen->winsys->get_param != NULL)
+         return sp_screen->winsys->get_param(sp_screen->winsys, param);
+      else
+         return 1;
    }
    /* should only get here on unhandled cases */
    debug_printf("Unexpected PIPE_CAP %d query\n", param);

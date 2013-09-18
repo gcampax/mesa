@@ -82,6 +82,7 @@ nv30_screen_get_param(struct pipe_screen *pscreen, enum pipe_cap param)
    case PIPE_CAP_TGSI_TEXCOORD:
    case PIPE_CAP_USER_CONSTANT_BUFFERS:
    case PIPE_CAP_USER_INDEX_BUFFERS:
+   case PIPE_CAP_BUFFER_SHARE:
       return 1;
    case PIPE_CAP_USER_VERTEX_BUFFERS:
       return 0;

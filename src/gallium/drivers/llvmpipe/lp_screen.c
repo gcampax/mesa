@@ -105,6 +105,8 @@ llvmpipe_get_name(struct pipe_screen *screen)
 static int
 llvmpipe_get_param(struct pipe_screen *screen, enum pipe_cap param)
 {
+   struct llvmpipe_screen *lp_screen = llvmpipe_screen(screen);
+
    switch (param) {
    case PIPE_CAP_MAX_COMBINED_SAMPLERS:
       return 2 * PIPE_MAX_SAMPLERS;  /* VS + FS samplers */
@@ -233,6 +235,11 @@ llvmpipe_get_param(struct pipe_screen *screen, enum pipe_cap param)
       return PIPE_MAX_VIEWPORTS;
    case PIPE_CAP_ENDIANNESS:
       return PIPE_ENDIAN_NATIVE;
+   case PIPE_CAP_BUFFER_SHARE:
+      if (lp_screen->winsys->get_param != NULL)
+         return lp_screen->winsys->get_param(lp_screen->winsys, param);
+      else
+         return 1;
    }
    /* should only get here on unhandled cases */
    debug_printf("Unexpected PIPE_CAP %d query\n", param);

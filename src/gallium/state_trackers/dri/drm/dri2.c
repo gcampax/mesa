@@ -264,6 +264,10 @@ dri2_drawable_process_buffers(struct dri_context *ctx,
       templ.bind = bind;
       whandle.handle = buf->name;
       whandle.stride = buf->pitch;
+      if (screen->can_share_buffer)
+         whandle.type = DRM_API_HANDLE_TYPE_SHARED;
+      else
+         whandle.type = DRM_API_HANDLE_TYPE_KMS;
 
       drawable->textures[statt] =
          screen->base.screen->resource_from_handle(screen->base.screen,
@@ -432,7 +436,10 @@ dri2_allocate_buffer(__DRIscreen *sPriv,
    }
 
    memset(&whandle, 0, sizeof(whandle));
-   whandle.type = DRM_API_HANDLE_TYPE_SHARED;
+   if (screen->can_share_buffer)
+      whandle.type = DRM_API_HANDLE_TYPE_SHARED;
+   else
+      whandle.type = DRM_API_HANDLE_TYPE_KMS;
    screen->base.screen->resource_get_handle(screen->base.screen,
          buffer->resource, &whandle);
 
@@ -832,8 +839,16 @@ dri2_destroy_image(__DRIimage *img)
    FREE(img);
 }
 
+static int
+dri2_get_capabilities(__DRIscreen *_screen)
+{
+   struct dri_screen *screen = dri_screen(_screen);
+
+   return (screen->can_share_buffer ? __DRI_IMAGE_CAP_GLOBAL_NAMES : 0);
+}
+
 static struct __DRIimageExtensionRec dri2ImageExtension = {
-    { __DRI_IMAGE, 5 },
+    { __DRI_IMAGE, 9 },
     dri2_create_image_from_name,
     dri2_create_image_from_renderbuffer,
     dri2_destroy_image,
@@ -843,6 +858,10 @@ static struct __DRIimageExtensionRec dri2ImageExtension = {
     dri2_validate_usage,
     dri2_from_names,
     dri2_from_planar,
+    NULL, /* from texture */
+    NULL, /* from fds */
+    NULL, /* from dma bufs */
+    dri2_get_capabilities,
 };
 
 /*
@@ -905,6 +924,7 @@ dri2_init_screen(__DRIscreen * sPriv)
    if (screen->st_api->profile_mask & ST_PROFILE_OPENGL_ES2_MASK)
       sPriv->api_mask |= 1 << __DRI_API_GLES2;
 
+   screen->can_share_buffer = pscreen->get_param(pscreen, PIPE_CAP_BUFFER_SHARE);
    screen->auto_fake_front = dri_with_format(sPriv);
    screen->broken_invalidate = !sPriv->dri2.useInvalidate;
    screen->lookup_egl_image = dri2_lookup_egl_image;

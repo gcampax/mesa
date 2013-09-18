@@ -42,7 +42,7 @@ dri_fd_get_driver_name(int fd)
    struct udev *udev;
    struct udev_device *device, *parent;
    const char *pci_id;
-   char *driver = "swrast";
+   char *driver = "swrast_dri2";
    int vendor_id, chip_id, i, j;
 
    if (getenv("LIBGL_ALWAYS_SOFTWARE") != NULL)

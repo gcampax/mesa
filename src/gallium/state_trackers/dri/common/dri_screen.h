@@ -69,6 +69,7 @@ struct dri_screen
 
    /* drm */
    int fd;
+   boolean can_share_buffer;
 
    /* gallium */
    boolean d_depth_bits_last;
